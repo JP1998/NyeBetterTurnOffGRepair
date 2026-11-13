@@ -3,6 +3,8 @@
 ## Title: Nye Better Turn off Guild Repair
 ## Notes: ...or this guild will go broke.
 ## Version: @project-version@
+## X-Wago-ID: rN4rlxKD
+## X-Curse-Project-ID: 1803526
 src/base.lua
 locales/enUS.lua
 locales/enGB.lua
