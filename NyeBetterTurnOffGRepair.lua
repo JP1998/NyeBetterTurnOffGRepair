@@ -12,9 +12,9 @@ app.print = function(self, msg, ...)
     self:_print("", msg, ...);
 end
 app.log = function(self, msg, ...)
-    --if self.Settings:Get("Debug", "Enabled") then
-    self:_print("DEBUG ", msg, ...);
-    --end
+    if app.Data.Debug then
+        self:_print("DEBUG ", msg, ...);
+    end
 end
 app._print = function(self, prefix, msg, ...)
     local args = {...};
@@ -146,6 +146,9 @@ app:RegisterEvent("ADDON_LOADED", "NyeBetterTurnOffGRepair", function(addon)
 end);
 
 app.Data = {};
+
+app.Data.Debug = false;
+
 app.Data.GuildGroup = false;
 app.Data.ValidInstance = false;
 app.Data.AnyInstance = false;
@@ -187,7 +190,7 @@ app.CheckInstanceStatus = function()
     local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, lfgDungeonID, hasWorldTier = GetInstanceInfo()
 
     local valid = instanceType == "raid" and table.contains(app.Data.ValidRaids, instanceID)
-    app:log("Currently in " .. name .. " on difficulty " .. difficultyName .. ". Checking validity: " .. tostring(valid));
+    app:log("Currently in " .. name .. " (" .. instanceID .. ") on difficulty " .. difficultyName .. " (" .. difficultyID .. "). Checking validity: " .. tostring(valid));
 
     local any = table.contains(app.Data.OutsideInstances, instanceType);
 
