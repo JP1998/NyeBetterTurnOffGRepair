@@ -1,0 +1,10 @@
+## Author: Luckywolf-Stormrage (https://www.github.com/JP1998)
+## Interface: 120105
+## Title: Nye Better Turn off Guild Repair
+## Notes: ...or this guild will go broke.
+## Version: @project-version@
+src/base.lua
+locales/enUS.lua
+locales/enGB.lua
+locales/deDE.lua
+NyeBetterTurnOffGRepair.lua
