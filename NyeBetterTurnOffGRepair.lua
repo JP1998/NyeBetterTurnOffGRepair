@@ -202,7 +202,8 @@ app.CheckGuildGroupStatus = function()
     app:log("Currently in a guild group?: " .. tostring(app.Data.GuildGroup));
 end
 app.CheckGuildRepairStatus = function()
-    app.Data.GuildRepair = CanGuildBankRepair()
+    -- TODO: Make guild rank for this query changeable
+    app.Data.GuildRepair = C_GuildInfo.GuildControlGetRankFlags(6)[15]; -- CanGuildBankRepair()
     app:log("Currently guild repairs turned on?: " .. tostring(app.Data.GuildRepair));
 end
 app.SetReminder = function(text)
