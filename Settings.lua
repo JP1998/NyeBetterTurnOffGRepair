@@ -56,6 +56,9 @@ settings.Initialize = function(self)
     app.Settings.Position.XSlider:SetValue(NyeBetterTurnOffGRepairSettings["Position"]["Horizontal"]);
     app.Settings.Position.YSlider:SetValue(NyeBetterTurnOffGRepairSettings["Position"]["Vertical"]);
 
+    UIDropDownMenu_SetSelectedValue(app.Settings.General.GuildRankDropdown,
+            app.Settings.General.GuildRankValues[NyeBetterTurnOffGRepairSettings["General"]["GuildRank"]]);
+
     self.Frame:Refresh();
 
     initialized = true;
@@ -247,7 +250,45 @@ end)
 
 app.Settings.Position.YSlider = Position_YSlider;
 
+app.Settings.General = {};
+app.Settings.General.GuildRankValues = {};
 
+local GuildRank_Dropdown_Label = settingsFrame:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+GuildRank_Dropdown_Label:SetPoint("TOPLEFT", Position_YSlider_ValueLabel, "BOTTOMLEFT", 0, 18);
+GuildRank_Dropdown_Label:SetJustifyH("LEFT");
+GuildRank_Dropdown_Label:SetText("Guild rank for repairs");
+GuildRank_Dropdown_Label:Show();
+
+local GuildRank_Dropdown = CreateFrame("FRAME", "NyeBetterTurnOffGRepair-Settings-GuildRank_Dropdown", settingsFrame, "UIDropDownMenuTemplate");
+GuildRank_Dropdown:SetPoint("TOPLEFT", GuildRank_Dropdown_Label, "BOTTOMLEFT", 0, -18);
+UIDropDownMenu_SetWidth(GuildRank_Dropdown, 300);
+UIDropDownMenu_SetText(GuildRank_Dropdown, "Your guild rank goes here");
+UIDropDownMenu_Initialize(GuildRank_Dropdown, function(self, level, menuList)
+    local info = UIDropDownMenu_CreateInfo()
+
+    for gr=1,GuildControlGetNumRanks() do
+        local rankName = GuildControlGetRankName(gr);
+
+        info.text = rankName;
+        app.Settings.General.GuildRankValues[gr] = rankName;
+        info.arg1 = gr;
+        info.checked = app.Settings:Get("General", "GuildRank") == gr;
+
+        info.func = self.SetValue;
+
+        UIDropDownMenu_AddButton(info);
+    end
+end)
+function GuildRank_Dropdown:SetValue(newValue)
+    app.Settings:Set("General", "GuildRank", newValue);
+    UIDropDownMenu_SetSelectedValue(GuildRank_Dropdown, app.Settings.General.GuildRankValues[newValue]);
+
+    -- Because this is called from a sub-menu, only that menu level is closed by default.
+    -- Close the entire menu with this next call
+    CloseDropDownMenus();
+end
+
+app.Settings.General.GuildRankDropdown = GuildRank_Dropdown;
 
 
 
