@@ -51,7 +51,10 @@ settings.Initialize = function(self)
 
     settings.Data = NyeBetterTurnOffGRepairSettings;
 
-    app.Settings.Debug.Enabled:SetChecked(NyeBetterTurnOffGRepairSettings["Debug"]["Enabled"]);
+    app.Settings.Debug.EnabledCheckBox:SetChecked(NyeBetterTurnOffGRepairSettings["Debug"]["Enabled"]);
+
+    app.Settings.Position.XSlider:SetValue(NyeBetterTurnOffGRepairSettings["Position"]["Horizontal"]);
+    app.Settings.Position.YSlider:SetValue(NyeBetterTurnOffGRepairSettings["Position"]["Vertical"]);
 
     self.Frame:Refresh();
 
@@ -169,4 +172,83 @@ Debug_Enabled_Checkbox:SetScript("OnClick", function(self, button, down)
 end);
 Debug_Enabled_Checkbox:Show();
 
-app.Settings.Debug.Enabled = Debug_Enabled_Checkbox;
+app.Settings.Debug.EnabledCheckBox = Debug_Enabled_Checkbox;
+
+local General_Label = settingsFrame:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+General_Label:SetPoint("TOPLEFT", app.Settings.Debug.EnabledCheckBox, "BOTTOMLEFT", 0, -24);
+General_Label:SetJustifyH("LEFT");
+General_Label:SetTextColor(1, 0.82, 0, 1);
+General_Label:SetText("General");
+General_Label:Show();
+
+app.Settings.Position = {};
+
+local Position_XSlider = CreateFrame("Slider", "NyeBetterTurnOffGRepair-Settings-Position_XSlider", settingsFrame, "MinimalSliderTemplate");
+
+Position_XSlider:SetPoint("TOPLEFT", General_Label, "BOTTOMLEFT", 0, -18);
+Position_XSlider:SetPoint("RIGHT", settingsFrame, "RIGHT", -12, 0);
+Position_XSlider:SetHeight(17);
+Position_XSlider:SetMinMaxValues(-math.floor(GetScreenWidth()), math.ceil(GetScreenWidth()));
+Position_XSlider:SetValueStep(1);
+Position_XSlider:SetObeyStepOnDrag(true);
+
+local Position_XSlider_Label = settingsFrame:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+Position_XSlider_Label:SetPoint("CENTER", Position_XSlider, "CENTER", 0, 12);
+Position_XSlider_Label:SetJustifyH("LEFT");
+Position_XSlider_Label:SetText("Horizontal Position");
+Position_XSlider_Label:Show();
+
+local Position_XSlider_ValueLabel = settingsFrame:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+Position_XSlider_ValueLabel:SetPoint("TOPLEFT", Position_XSlider, "BOTTOMLEFT", 0, 0);
+Position_XSlider_ValueLabel:SetJustifyH("LEFT");
+Position_XSlider_ValueLabel:SetText("0");
+Position_XSlider_ValueLabel:Show();
+
+Position_XSlider:SetScript("OnValueChanged", function(self, value, userInput)
+    Position_XSlider_ValueLabel:SetText("" .. value);
+
+    if userInput then
+        app.Settings:Set("Position", "Horizontal", value);
+        app:UpdateFramePosition();
+    end
+end)
+
+app.Settings.Position.XSlider = Position_XSlider;
+
+local Position_YSlider = CreateFrame("Slider", "NyeBetterTurnOffGRepair-Settings-Position_YSlider", settingsFrame, "MinimalSliderTemplate");
+
+Position_YSlider:SetPoint("TOPLEFT", Position_XSlider, "BOTTOMLEFT", 0, -18);
+Position_YSlider:SetPoint("RIGHT", settingsFrame, "RIGHT", -12, 0);
+Position_YSlider:SetHeight(17);
+Position_YSlider:SetMinMaxValues(-math.floor(GetScreenHeight()), math.ceil(GetScreenHeight()));
+Position_YSlider:SetValueStep(1);
+Position_YSlider:SetObeyStepOnDrag(true);
+
+local Position_YSlider_Label = settingsFrame:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+Position_YSlider_Label:SetPoint("CENTER", Position_YSlider, "CENTER", 0, 12);
+Position_YSlider_Label:SetJustifyH("LEFT");
+Position_YSlider_Label:SetText("Vertical Position");
+Position_YSlider_Label:Show();
+
+local Position_YSlider_ValueLabel = settingsFrame:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+Position_YSlider_ValueLabel:SetPoint("TOPLEFT", Position_YSlider, "BOTTOMLEFT", 0, 0);
+Position_YSlider_ValueLabel:SetJustifyH("LEFT");
+Position_YSlider_ValueLabel:SetText("0");
+Position_YSlider_ValueLabel:Show();
+
+Position_YSlider:SetScript("OnValueChanged", function(self, value, userInput)
+    Position_YSlider_ValueLabel:SetText("" .. value);
+
+    if userInput then
+        app.Settings:Set("Position", "Vertical", value);
+        app:UpdateFramePosition();
+    end
+end)
+
+app.Settings.Position.YSlider = Position_YSlider;
+
+
+
+
+
+

@@ -128,7 +128,7 @@ app:RegisterEvent("ADDON_LOADED", "NyeBetterTurnOffGRepair", function(addon)
 
     app.ReminderText = UIParent:CreateFontString(nil, "OVERLAY");
     app.ReminderText:SetFont("Fonts/FRIZQT__.TTF", 36, "THICKOUTLINE");
-    app.ReminderText:SetPoint("CENTER", UIParent, "CENTER", 0, 0);
+    app.ReminderText:SetPoint("CENTER", UIParent, "CENTER", app.Settings:Get("Position", "Horizontal"), app.Settings:Get("Position", "Vertical"));
     app.ReminderText:SetTextColor(1, 1, 1);
     app.ReminderText:SetShadowColor(0, 0, 0);
     app.ReminderText:SetText("");
@@ -145,6 +145,10 @@ app:RegisterEvent("ADDON_LOADED", "NyeBetterTurnOffGRepair", function(addon)
 
     createSlashCommand(grep_commandHandler, "NyeBetterTurnOffGRepair", "/grep", "/guildrep", "/guildrepair" );
 end);
+
+app.UpdateFramePosition = function(self)
+    self.ReminderText:SetPoint("CENTER", UIParent, "CENTER", app.Settings:Get("Position", "Horizontal"), app.Settings:Get("Position", "Vertical"));
+end
 
 app.Data = {};
 
