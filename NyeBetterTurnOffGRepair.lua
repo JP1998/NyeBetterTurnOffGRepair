@@ -227,20 +227,22 @@ end
 app.CheckStatus = function()
     app:log("Checking guild repair status:");
 
-    app.CheckInstanceStatus();
-    app.CheckGuildGroupStatus();
-    app.CheckGuildRepairStatus();
-
     local showedReminder = false;
 
-    if app.Data.GuildGroup and app.Data.ValidInstance and not app.Data.GuildRepair then
-        app.SetReminder(L["REMINDER_TURNON"]);
-        showedReminder = true;
-    end
+    if C_GuildInfo.GetGuildRankOrder(UnitGUID("player")) == 1 or app.Settings:Get("Debug", "Enabled") then
+        app.CheckInstanceStatus();
+        app.CheckGuildGroupStatus();
+        app.CheckGuildRepairStatus();
 
-    if app.Data.GuildRepair and (not app.Data.ValidInstance or not app.Data.GuildGroup) then
-        app.SetReminder(L["REMINDER_TURNOFF"]);
-        showedReminder = true;
+        if app.Data.GuildGroup and app.Data.ValidInstance and not app.Data.GuildRepair then
+            app.SetReminder(L["REMINDER_TURNON"]);
+            showedReminder = true;
+        end
+
+        if app.Data.GuildRepair and (not app.Data.ValidInstance or not app.Data.GuildGroup) then
+            app.SetReminder(L["REMINDER_TURNOFF"]);
+            showedReminder = true;
+        end
     end
 
     if not showedReminder then
