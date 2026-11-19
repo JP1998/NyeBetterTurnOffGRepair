@@ -15,8 +15,8 @@ settingsFrame.Tabs = {};
 settingsFrame.ModifierKeys = { "None", "Shift", "Ctrl", "Alt" };
 
 local mainCategory = Settings.RegisterCanvasLayoutCategory(settingsFrame, settingsFrame.name, settingsFrame.name);
-mainCategory.ID = settingsFrame.name;
 Settings.RegisterAddOnCategory(mainCategory);
+settings.SettingsCategoryID = mainCategory:GetID();
 
 settings.Open = function(self)
     -- Open the Options menu.
@@ -24,7 +24,7 @@ settings.Open = function(self)
         SettingsPanel:Show();
     end
 
-    Settings.OpenToCategory(app:GetName());
+    Settings.OpenToCategory(settings.SettingsCategoryID);
 end
 
 local SettingsBase = {
