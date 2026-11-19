@@ -113,7 +113,13 @@ local createSlashCommand = (function()
 end)();
 
 local grep_commandHandler = function(args)
-    app.ToggleReminder();
+    if #args == 0 then
+        app.ToggleReminder();
+    else
+        if args[1] == "options" then
+            app.Settings:Open();
+        end
+    end
 end
 
 app:RegisterEvent("ADDON_LOADED", "NyeBetterTurnOffGRepair", function(addon)
