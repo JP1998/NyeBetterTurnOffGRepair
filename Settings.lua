@@ -254,13 +254,13 @@ app.Settings.General = {};
 app.Settings.General.GuildRankValues = {};
 
 local GuildRank_Dropdown_Label = settingsFrame:CreateFontString(nil, "ARTWORK", "GameFontWhite");
-GuildRank_Dropdown_Label:SetPoint("TOPLEFT", Position_YSlider_ValueLabel, "BOTTOMLEFT", 0, 18);
+GuildRank_Dropdown_Label:SetPoint("TOPLEFT", Position_YSlider_ValueLabel, "BOTTOMLEFT", 0, -18);
 GuildRank_Dropdown_Label:SetJustifyH("LEFT");
 GuildRank_Dropdown_Label:SetText("Guild rank for repairs");
 GuildRank_Dropdown_Label:Show();
 
 local GuildRank_Dropdown = CreateFrame("FRAME", "NyeBetterTurnOffGRepair-Settings-GuildRank_Dropdown", settingsFrame, "UIDropDownMenuTemplate");
-GuildRank_Dropdown:SetPoint("TOPLEFT", GuildRank_Dropdown_Label, "BOTTOMLEFT", 0, -18);
+GuildRank_Dropdown:SetPoint("TOPLEFT", GuildRank_Dropdown_Label, "BOTTOMLEFT", 0, -2);
 UIDropDownMenu_SetWidth(GuildRank_Dropdown, 300);
 UIDropDownMenu_SetText(GuildRank_Dropdown, "Your guild rank goes here");
 UIDropDownMenu_Initialize(GuildRank_Dropdown, function(self, level, menuList)
