@@ -12,7 +12,7 @@ app.print = function(self, msg, ...)
     self:_print("", msg, ...);
 end
 app.log = function(self, msg, ...)
-    if app.Data.Debug then
+    if app.Settings:Get("Debug", "Enabled") then
         self:_print("DEBUG ", msg, ...);
     end
 end
@@ -122,6 +122,7 @@ app:RegisterEvent("ADDON_LOADED", "NyeBetterTurnOffGRepair", function(addon)
     end
 
     app.Version = C_AddOns.GetAddOnMetadata(app:GetName(), "Version");
+    app.Settings:Initialize();
 
     app:UnregisterEvent("ADDON_LOADED", "NyeBetterTurnOffGRepair");
 

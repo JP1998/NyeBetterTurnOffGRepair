@@ -1,6 +1,7 @@
 ## Author: Luckywolf-Stormrage (https://www.github.com/JP1998)
 ## Interface: 120105
 ## Title: Nye Better Turn off Guild Repair
+## SavedVariables: NyeBetterTurnOffGRepairSettings
 ## Notes: ...or this guild will go broke.
 ## Version: @project-version@
 ## X-Wago-ID: rN4rlxKD
@@ -10,3 +11,4 @@ locales/enUS.lua
 locales/enGB.lua
 locales/deDE.lua
 NyeBetterTurnOffGRepair.lua
+Settings.lua
