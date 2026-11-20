@@ -196,6 +196,10 @@ end
 app.Events.GUILDBANK_UPDATE_WITHDRAWMONEY = function(isInitialLogin, isReloadingUi)
     app.CheckStatus();
 end
+app.Events.GUILD_RANKS_UPDATE = function()
+    app:log("Updated guild rank settings dropdown");
+    app.Settings.General.GuildRankDropdown:Initialize();
+end
 
 app.CheckInstanceStatus = function()
     local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, lfgDungeonID, hasWorldTier = GetInstanceInfo()
@@ -213,7 +217,7 @@ app.CheckGuildGroupStatus = function()
     app:log("Currently in a guild group?: " .. tostring(app.Data.GuildGroup));
 end
 app.CheckGuildRepairStatus = function()
-    app.Data.GuildRepair = C_GuildInfo.GuildControlGetRankFlags(app.Settings:Get("General", "GuildRank"))[15]; -- CanGuildBankRepair()
+    app.Data.GuildRepair = C_GuildInfo.GuildControlGetRankFlags(app.Settings:GetGuildRank())[15]; -- CanGuildBankRepair()
     app:log("Currently guild repairs turned on?: " .. tostring(app.Data.GuildRepair));
 end
 app.SetReminder = function(text)

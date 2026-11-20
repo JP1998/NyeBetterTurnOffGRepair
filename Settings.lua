@@ -37,7 +37,10 @@ local SettingsBase = {
     },
     -- TODO: Save whether to show reminder (per character?)
     ["General"] = {
-        ["GuildRank"] = 6,
+        ["GuildRank"] = {
+            -- [""] = 1, -- default for no guild
+            -- ["Professional Slackers-Silvermoon"] = 6, -- for every guild a separate entry
+        },
         ["Timeout"] = 60, --?
     },
 };
@@ -56,8 +59,7 @@ settings.Initialize = function(self)
     app.Settings.Position.XSlider:SetValue(NyeBetterTurnOffGRepairSettings["Position"]["Horizontal"]);
     app.Settings.Position.YSlider:SetValue(NyeBetterTurnOffGRepairSettings["Position"]["Vertical"]);
 
-    UIDropDownMenu_SetSelectedValue(app.Settings.General.GuildRankDropdown,
-            app.Settings.General.GuildRankValues[NyeBetterTurnOffGRepairSettings["General"]["GuildRank"]]);
+    app.Settings.General.GuildRankDropdown:Initialize();
 
     self.Frame:Refresh();
 
@@ -76,6 +78,33 @@ settings.Set = function(self, category, option, value)
     self.Data[category][option] = value;
 
     self.Frame:Refresh();
+end
+
+settings.GetGuild = function(self)
+    if not IsInGuild() then
+        return "";
+    end
+
+    if not GetGuildInfo("player") then
+        return ""; -- Guild information is not immediately available on load in, so we have to use the default setting
+    end
+
+    local guildName, _, _, realm = GetGuildInfo("player");
+
+    return guildName .. "-" .. realm;
+end
+
+settings.GetGuildRank = function(self)
+    local guild = self:GetGuild();
+
+    if not NyeBetterTurnOffGRepairSettings["General"]["GuildRank"][guild] then
+        NyeBetterTurnOffGRepairSettings["General"]["GuildRank"][guild] = 1;
+    end
+
+    return NyeBetterTurnOffGRepairSettings["General"]["GuildRank"][guild];
+end
+settings.SetGuildRank = function(self, rank)
+    NyeBetterTurnOffGRepairSettings["General"]["GuildRank"][self:GetGuild()] = rank;
 end
 
 settingsFrame.AddObject = function(self, obj)
@@ -263,24 +292,35 @@ local GuildRank_Dropdown = CreateFrame("FRAME", "NyeBetterTurnOffGRepair-Setting
 GuildRank_Dropdown:SetPoint("TOPLEFT", GuildRank_Dropdown_Label, "BOTTOMLEFT", 0, -2);
 UIDropDownMenu_SetWidth(GuildRank_Dropdown, 300);
 UIDropDownMenu_SetText(GuildRank_Dropdown, "Your guild rank goes here");
-UIDropDownMenu_Initialize(GuildRank_Dropdown, function(self, level, menuList)
-    local info = UIDropDownMenu_CreateInfo()
 
-    for gr=1,GuildControlGetNumRanks() do
-        local rankName = GuildControlGetRankName(gr);
+function GuildRank_Dropdown:Initialize()
+    -- app.Settings.General.GuildRankDropdown:Initialize();
+    UIDropDownMenu_ClearAll(GuildRank_Dropdown);
+    app.Settings.General.GuildRankValues = {};
 
-        info.text = rankName;
-        app.Settings.General.GuildRankValues[gr] = rankName;
-        info.arg1 = gr;
-        info.checked = app.Settings:Get("General", "GuildRank") == gr;
+    UIDropDownMenu_Initialize(GuildRank_Dropdown, function(self, level, menuList)
+        local info = UIDropDownMenu_CreateInfo();
 
-        info.func = self.SetValue;
+        for gr=1,GuildControlGetNumRanks() do
+            local rankName = GuildControlGetRankName(gr);
 
-        UIDropDownMenu_AddButton(info);
-    end
-end)
+            info.text = rankName;
+            app.Settings.General.GuildRankValues[gr] = rankName;
+            info.arg1 = gr;
+            info.checked = app.Settings:GetGuildRank() == gr;
+
+            info.func = self.SetValue;
+
+            UIDropDownMenu_AddButton(info);
+        end
+    end);
+
+    UIDropDownMenu_SetSelectedValue(app.Settings.General.GuildRankDropdown,
+            app.Settings.General.GuildRankValues[app.Settings:GetGuildRank()]);
+end
+
 function GuildRank_Dropdown:SetValue(newValue)
-    app.Settings:Set("General", "GuildRank", newValue);
+    app.Settings:SetGuildRank(newValue);
     UIDropDownMenu_SetSelectedValue(GuildRank_Dropdown, app.Settings.General.GuildRankValues[newValue]);
 
     -- Because this is called from a sub-menu, only that menu level is closed by default.
